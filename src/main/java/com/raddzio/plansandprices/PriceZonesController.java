@@ -17,28 +17,28 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Controller
 @RequestMapping(path = "v1")
-public class PlansController {
+public class PriceZonesController {
 
     @Autowired
-    private PlanRepository planRepository;
+    private PriceZoneRepository priceZoneRepository;
     @Autowired
-    private PlanModelAssembler planModelAssembler;
+    private PriceZoneModelAssembler priceZoneModelAssembler;
 
-    @GetMapping("/plans")
+    @GetMapping("/price-zones")
     public @ResponseBody
-    CollectionModel<EntityModel<Plan>> getAllPlans() {
-        List<EntityModel<Plan>> plans = planRepository.findAll().stream()
-                .map(planModelAssembler::toModel)
+    CollectionModel<EntityModel<PriceZone>> getAllPriceZones() {
+        List<EntityModel<PriceZone>> priceZones = priceZoneRepository.findAll().stream()
+                .map(priceZoneModelAssembler::toModel)
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(plans, linkTo(methodOn(PlansController.class).getAllPlans()).withSelfRel());
+        return CollectionModel.of(priceZones, linkTo(methodOn(PriceZonesController.class).getAllPriceZones()).withSelfRel());
     }
 
-    @GetMapping("/plans/{id}")
+    @GetMapping("/price-zones/{id}")
     public @ResponseBody
-    EntityModel<Plan> getPlanById(@PathVariable Long id) throws PlanNotFoundException {
-        Plan plan = planRepository.findById(id).orElseThrow(() -> new PlanNotFoundException(id));
+    EntityModel<PriceZone> getPriceZoneById(@PathVariable String id) throws PriceZoneNotFoundException {
+        PriceZone priceZone = priceZoneRepository.findById(id).orElseThrow(() -> new PriceZoneNotFoundException(id));
 
-        return planModelAssembler.toModel(plan);
+        return priceZoneModelAssembler.toModel(priceZone);
     }
 }

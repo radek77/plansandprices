@@ -1,8 +1,6 @@
 package com.raddzio.plansandprices;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PlanRepository extends CrudRepository<Plan, Long> {
-
-    public Plan getPlanById(Long id);
+public interface PlanRepository extends JpaRepository<Plan, Long> {
 }
