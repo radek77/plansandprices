@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  pps-db:
+    build:
+      context: .
+      dockerfile: pps-db.Dockerfile
+    container_name: pps-db
+    restart: always
+    environment:
+      CONTAINER_NAME: pps-db
+      MYSQL_ROOT_PASSWORD: dbRootPass
+      MYSQL_USER: dbUser
+      MYSQL_PASSWORD: dbUserPass
+      MYSQL_INITDB_SKIP_TZINFO: skip
+    ports:
+      - 3307:3306
+    volumes:
+      - ./pps-db-entrypoint.sh:/docker-entrypoint-initdb.d/database.sh
+    tmpfs:
+      - /var/lib/mysql:size=1G
+    command: mysqld --sql_mode= --datadir=/var/lib/mysql
+
+  pps-srv:
+    build:
+      context: .
+      dockerfile: pps-srv.Dockerfile
+    container_name: pps-srv
+    volumes:
+      - ./pps-srv-entrypoint.sh:/entrypoint.sh
+    depends_on:
+      - pps-db
